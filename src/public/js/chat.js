@@ -2,6 +2,13 @@ console.log('hi from server....');
 
 const socket = io();
 
+function getParam(param){
+    return new URLSearchParams(window.location.search).get(param);
+  }
+
+  const name = getParam("username");
+
+  console.log("Par=====> ", name);
 
 ///////// elements
 const $messageFrom = document.querySelector('#click');
@@ -13,21 +20,21 @@ const $message = document.querySelector("#message");
 
 ////////// template
 const messageTemplate = document.querySelector('#message-template').innerHTML;
-const locationTemplate = document.querySelector("#location-template").innerHTML; 
+// const locationTemplate = document.querySelector("#location-template").innerHTML; 
 
 
 // socket.on('updateData', (count) => {
 //     console.log(`the count has update ${count}`);
 // });
 
-socket.on('shareLocation', (Obj) => {
-    console.log(Obj);
-    const html = Mustache.render(locationTemplate, {
-        url: Obj.url,
-        creatAt: moment(Obj.creatAt).format('h:mm a')
-    });
-    $message.insertAdjacentHTML('beforeend', html)
-});
+// socket.on('shareLocation', (Obj) => {
+//     console.log(Obj);
+//     const html = Mustache.render(locationTemplate, {
+//         url: Obj.url,
+//         creatAt: moment(Obj.creatAt).format('h:mm a')
+//     });
+//     $message.insertAdjacentHTML('beforeend', html)
+// });
 
 socket.on('ServerMessage', (message) => {
     console.log("==> ", message);
@@ -39,6 +46,19 @@ socket.on('ServerMessage', (message) => {
     $message.insertAdjacentHTML('beforeend', html)
 });
 
+const user = {
+    name: getParam("username"),
+    room: getParam("room")
+};
+
+socket.emit('createRoom', user, (error) => {
+    //// enable
+    if (error) {
+        return console.log(error);
+    }
+    console.log('message was delivered !')
+});
+
 
 
 
@@ -47,7 +67,12 @@ $messageFrom.addEventListener('submit', (e) => {
     /// disable
     $messageFormButton.setAttribute('disabled', 'disabled');
     const message = e.target.elements.inputText.value;
-    socket.emit('SendMessage', message, (error) => {
+    const user_data_obj = {
+        message,
+        name: getParam("username"),
+        room: getParam("room")
+    };
+    socket.emit('SendMessage', user_data_obj, (error) => {
         //// enable
 
         $messageFormButton.removeAttribute('disabled');
@@ -64,26 +89,26 @@ $messageFrom.addEventListener('submit', (e) => {
 
 
 
-$locationButton.addEventListener('click', () => {
-    ////// disable
-    $locationButton.setAttribute('disabled', 'disabled');
+// $locationButton.addEventListener('click', () => {
+//     ////// disable
+//     $locationButton.setAttribute('disabled', 'disabled');
 
-    if (!navigator.geolocation) {
-        return alert("navigator is not support your browser !")
-    }
+//     if (!navigator.geolocation) {
+//         return alert("navigator is not support your browser !")
+//     }
 
-    navigator.geolocation.getCurrentPosition((position) => {
-        // console.log(position.coords.latitude);  ///longitude
-        socket.emit("sendLocation", {
-            latitude: position.coords.latitude, 
-            longitude: position.coords.longitude
-        }, (data) => {
-            if (data) {
-                $locationButton.removeAttribute('disabled')
-                console.log(data);
-            }
+//     navigator.geolocation.getCurrentPosition((position) => {
+//         // console.log(position.coords.latitude);  ///longitude
+//         socket.emit("sendLocation", {
+//             latitude: position.coords.latitude, 
+//             longitude: position.coords.longitude
+//         }, (data) => {
+//             if (data) {
+//                 $locationButton.removeAttribute('disabled')
+//                 console.log(data);
+//             }
            
-        });
-    });
-});
+//         });
+//     });
+// });
 
