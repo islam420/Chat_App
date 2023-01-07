@@ -16,7 +16,7 @@ const { reloadMessage, generatedLocation } = require('./src/message');
 // import { reloadMessage, generatedLocation } from './src/message';
 
 // mod.cjs
-const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+// const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 
 const app = express();
 const server = http.createServer(app);
@@ -41,20 +41,20 @@ app.use(express.static(publicPath))
 //     });
 // })
 
-const callAPI =  async (data) => {
+// const callAPI =  async (data) => {
 
-    const response = await fetch("https://gsms.co.in/mlm/api/add_chat", {
-        method: 'post',
-        body: JSON.stringify({name: data.name, message: data.message}),
-        headers: {"Content-Type": "multipart/form-data"}
-    });
+//     const response = await fetch("https://gsms.co.in/mlm/api/add_chat", {
+//         method: 'post',
+//         body: JSON.stringify({name: data.name, message: data.message}),
+//         headers: {"Content-Type": "multipart/form-data"}
+//     });
 
-    const data_1 = await response.json()
+//     const data_1 = await response.json()
 
-// console.log("Api ========> ", data_1)
+// // console.log("Api ========> ", data_1)
 
     
-}
+// }
 
 
 io.on('connection', (socket) => {
@@ -74,7 +74,7 @@ io.on('connection', (socket) => {
             return callback('profane reject !')
         }
         io.to(userData.room).emit('ServerMessage', reloadMessage(userData.message));
-        callAPI({name: userData.name, message: userData.message});
+        // callAPI({name: userData.name, message: userData.message});
         callback();
     });
 
