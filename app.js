@@ -68,7 +68,7 @@ console.log("Api ========> ", data_1)
 io.on('connection', (socket) => {
     console.log('new client connect ...');
 
-    socket.emit('ServerMessage', reloadMessage('welcome from server side.'));
+    socket.emit('ServerMessage', reloadMessage('welcome from server side...'));
 
     socket.on("createRoom", (user, cb) => {
         socket.join(user.room);
