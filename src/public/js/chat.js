@@ -36,6 +36,28 @@ const messageTemplate = document.querySelector('#message-template').innerHTML;
 //     $message.insertAdjacentHTML('beforeend', html)
 // });
 
+// function callAPI(data) {
+//     var myHeaders = new Headers();
+// myHeaders.append("Content-Type", "application/json");
+
+// var raw = JSON.stringify({
+//   "name": data.name,
+//   "message": data.message
+// });
+
+// var requestOptions = {
+//   method: 'POST',
+//   headers: myHeaders,
+//   body: raw,
+//   redirect: 'follow'
+// };
+
+// fetch("https://gsms.co.in/mlm/api/add_chat", requestOptions)
+//   .then(response => response.text())
+//   .then(result => console.log("API Response ===> ", result))
+//   .catch(error => console.log('error', error));
+// }
+
 socket.on('ServerMessage', (message) => {
     console.log("==> ", message);
     const html = Mustache.render(messageTemplate, {
@@ -72,6 +94,9 @@ $messageFrom.addEventListener('submit', (e) => {
         name: getParam("username"),
         room: getParam("room")
     };
+
+    // callAPI({message, name: user_data_obj.name});
+
     socket.emit('SendMessage', user_data_obj, (error) => {
         //// enable
 

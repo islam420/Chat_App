@@ -4,6 +4,7 @@ const Filter = require('bad-words');
 const socketIo = require('socket.io');
 const chatRouter = require('./src/router/chatRouter');
 const path = require('path');
+const cors = require('cors');
 const { reloadMessage, generatedLocation } = require('./src/message');
 
 // import express from 'express';
@@ -19,6 +20,13 @@ const { reloadMessage, generatedLocation } = require('./src/message');
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 
 const app = express();
+
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cors());
+
+
 const server = http.createServer(app);
 const io = socketIo(server);
 
@@ -51,7 +59,7 @@ const callAPI =  async (data) => {
 
     const data_1 = await response.json()
 
-// console.log("Api ========> ", data_1)
+console.log("Api ========> ", data_1)
 
     
 }
